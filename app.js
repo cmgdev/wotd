@@ -14,13 +14,11 @@ app.get('/wotd/:year/:month', function(req, res){
 			data += chunk;
 		});
 		getRes.on('end', function() {
-			console.log('end');
+			res.send(data);
 		});
 	}).on('error', function(e) {
 		console.log("Got error: " + e.message);
 	});
-	console.log('Data is :' + data);
-	res.send('Hello World');
 });
 
 var server = app.listen(3000, function(){
