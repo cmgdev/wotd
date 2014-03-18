@@ -1,6 +1,7 @@
 var express = require('express');
 var http = require('http');
 var moment = require('moment');
+var cheerio = require('cheerio');
 
 var app = express();
 
@@ -15,7 +16,6 @@ app.get('/wotd/:year/:month', function(req, res){
 		wotdPath = "http://dictionary.reference.com/wordoftheday/archive/" 
 			+ req.params.year + "/" 
 			+ req.params.month + "/";
-	
 		doHttpGet(wotdPath, res);
 	}
 	else{
@@ -38,8 +38,13 @@ var doHttpGet = function(path, res){
 			data += chunk;
 		});
 		getRes.on('end', function() {
-			//console.log(data);
-			res.send(data);
+			toReturn = "";
+			$ = cheerio.load(data);
+			lis = $(data).find('li');
+			lis.each(function(){
+				toReturn += this.text().replace(': ', '\t');
+			});
+			res.send(toReturn);
 		});
 	}).on('error', function(e) {
 		errorMsg = "Got error: " + e.message;
