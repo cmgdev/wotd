@@ -42,7 +42,7 @@ var doHttpGet = function(path, res){
 			$ = cheerio.load(data);
 			lis = $(data).find('li');
 			lis.each(function(){
-				toReturn += this.text().replace(': ', '\t');
+				toReturn += this.text().replace(': ', '\t') + '\n';
 			});
 			res.send(toReturn);
 		});
